@@ -176,9 +176,80 @@ app.post("/api/households",middleware, async(req ,res)=>{
         
     }
 })
-app.post("/api/households/join",async(req ,res)=>{})
-app.post("/api/households/me",async(req ,res)=>{})
-app.post("/api/households/:id/members",async(req ,res)=>{})
+app.post("/api/households/join",middleware,async(req ,res)=>{
+ try {
+    const {code}=req.body;
+    const id=req.user.id;
+    const findInviteCode=await HouseHolded.findOne({inviteCode:code});
+    if(!findInviteCode){
+        res.status(402).json({
+            message:"Invalid invite code"
+        })
+    }
+
+    findInviteCode.members.addToSet(id);
+    await findInviteCode.save();
+    res.status(200).json({
+        message:"you are joined room",
+        data:findInviteCode
+    })
+    
+ } catch (err) {
+    console.log("err",err);
+    res.status(500).json({
+        message:"Internal Server Error"
+    })
+    
+ }
+})
+app.get("/api/households/me",middleware,async(req ,res)=>{
+    try{
+        const id=req.user.id;
+
+        const currentUser=await HouseHolded.findOne({
+            members:id
+        });
+
+        if (!currentUser) {
+            return res.status(404).json({
+                message: "Household not found"
+            });
+        }
+
+
+        res.status(200).json({
+            message:"Current user's household",
+            data:currentUser
+        })
+
+
+    }catch(err){
+        console.log("err",err);
+        res.status(500).json({
+            message:"Internal Server Error"
+        })
+    }
+})
+app.get("/api/households/:id/members",middleware,async(req ,res)=>{
+    try{
+        const id=req.params.id;
+        const listAllmember=await HouseHolded.findById(id).select("members");
+
+        if(!listAllmember) return res.status(403).json({message:"no member"});
+
+        res.status(200).json({
+            message:"get all members",
+            data:listAllmember
+        })
+
+    }catch(err){
+        console.log("err",err)
+        res.status(500).json({
+            message:"internal server error"
+        })
+        return;
+    }
+})
 
 
 //Items
