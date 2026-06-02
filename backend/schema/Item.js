@@ -13,4 +13,4 @@ const Items=new mongose.Schema({
 },{timestamps:true});
 
 
-export const Item=mongose.model("Items",UserSchema);
+export const Item=mongose.model("Items",Items);
