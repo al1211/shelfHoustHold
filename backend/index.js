@@ -6,10 +6,12 @@ import { User } from "./schema/schema.js";
 import bcrypt from 'bcryptjs'
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken"
-import { createUser } from "./zod.js";
+import { createUser, housrHold } from "./zod.js";
 dotenv.config();
 import cookie from "cookie-parser"
 import { middleware } from "./middleware/auth.js";
+import {  HouseHolded } from "./schema/houseHoldSchema.js";
+import { generateInviteCode } from "./utils/InviteCode.js";
 
 
 
@@ -132,14 +134,45 @@ app.post("/api/auth/login",async(req ,res)=>{
 
 // houseHold apis
 
-app.get("/api/households",middleware, async(req ,res)=>{
+app.post("/api/households",middleware, async(req ,res)=>{
     try {
-        res.send("successfull cokkies implement")
+        const id=req.user.id;
+      
+        const {data,success}=housrHold.safeParse(req.body);
+        if(!success){
+            res.status(403).json({
+                message:"Inalid body"
+            })
+            return;
+        }
+        const invitationCode=generateInviteCode();
+        const findInviteCodeisAlreadyexitst=await HouseHolded.findOne({invitationCode});
+        if(findInviteCodeisAlreadyexitst){
+            res.status(403).json({
+                message:"Already exits code"
+            })
+            return;
+        }
+        const {name}=data;
+        const holdeddata=await HouseHolded.create({
+            name,
+            inviteCode:invitationCode,
+            members:[id],
+            
+        })
+      
+        res.status(200).json({
+            message:"succesfull create houst hold",
+            data:holdeddata,
+            success:true
+        })
         
     } catch (err) {
+        console.log("err",err);
         res.status(500).json({
             message:"Internal Server Error"
         })
+        return;
         
     }
 })

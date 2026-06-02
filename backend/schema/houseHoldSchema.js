@@ -13,4 +13,4 @@ const Household=new mongose.Schema({
 },{timestamps:true});
 
 
-export const User=mongose.model("houseHold",Household);
+export const HouseHolded=mongose.model("houseHold",Household);

@@ -7,12 +7,13 @@ export const middleware=async(req,res,next)=>{
     res.status(401).json({
         message:"access denied"
     })
+    return;
   };
 
    try {
         const verified = jwt.verify(token, process.env.PRIVATEKEY);
         req.user = verified; // Attach user payload to the request
-        next();
+        
     } catch (err) {
         res.status(403).json({ error: 'Invalid or expired token' });
     }
