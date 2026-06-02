@@ -8,11 +8,14 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken"
 import { createUser } from "./zod.js";
 dotenv.config();
+import cookie from "cookie-parser"
+import { middleware } from "./middleware/auth.js";
 
 
 
 const app=express();
 app.use(express.json())
+app.use(cookie())
 connectMongoDB();
 const privatekey=process.env.PRIVATEKEY||"my-secret key"
 
@@ -102,7 +105,16 @@ app.post("/api/auth/login",async(req ,res)=>{
             message:"Invalid usernam and password"
         })
     }
-   const token=await jwt.sign({id:checkUserExist._id},privatekey);
+   const token=await jwt.sign({id:checkUserExist._id},privatekey,{expiresIn:"1d"});
+   res.cookie("token",token,{
+        httpOnly:true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite:"lax",
+        maxAge:24*60*60*1000
+       })
+
+
+
 
    res.status(200).json({
     message:"succesfull login",
@@ -120,7 +132,17 @@ app.post("/api/auth/login",async(req ,res)=>{
 
 // houseHold apis
 
-app.post("/api/households",async(req ,res)=>{})
+app.get("/api/households",middleware, async(req ,res)=>{
+    try {
+        res.send("successfull cokkies implement")
+        
+    } catch (err) {
+        res.status(500).json({
+            message:"Internal Server Error"
+        })
+        
+    }
+})
 app.post("/api/households/join",async(req ,res)=>{})
 app.post("/api/households/me",async(req ,res)=>{})
 app.post("/api/households/:id/members",async(req ,res)=>{})
