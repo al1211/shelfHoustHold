@@ -427,103 +427,68 @@ return res.status(200).json({
 //Dashborad Items
 
 app.get("/api/dashboard/stats",middleware, async (req, res) => { 
-    try {
-        const userId = req.user.id;
+ try {
+    const id = req.user.id;
 
-        const user = await User.findById(userId).select("household");
+    const user = await User.findById(id)
+        .select("household");
 
-        if (!user?.household) {
-            return res.status(400).json({
-                message: "User is not part of any household"
-            });
-        }
-
-        const household = await HouseHolded.findById(user.household);
-
-        const totalItems = await Item.countDocuments({
-            houseHold: user.household
-        });
-
-        const fresh = await Item.countDocuments({
-            houseHold: user.household,
-            status: "fresh"
-        });
-
-        const used = await Item.countDocuments({
-            houseHold: user.household,
-            status: "used"
-        });
-
-        const wasted = await Item.countDocuments({
-            houseHold: user.household,
-            status: "wasted"
-        });
-
-        const expired = await Item.countDocuments({
-            houseHold: user.household,
-            status: "expired"
-        });
-
-        return res.status(200).json({
-            wasteScore: household.wasteScore,
-            totalItems,
-            fresh,
-            used,
-            wasted,
-            expired
-        });
-
-    } catch (err) {
-        console.log("err", err);
-
-        return res.status(500).json({
-            message: "Internal Server Error"
+    if (!user?.household) {
+        return res.status(403).json({
+            message: "Not a household member"
         });
     }
 
-})
-app.get("/api/dashboard/expiring", async (req, res) => {
-        try {
-        const userId = req.user.id;
+    const household = await HouseHolded.findById(
+        user.household
+    );
 
-        // User ka household nikalo
-        const user = await User.findById(userId)
-            .select("household");
+    const totalItem = await Item.countDocuments({
+        houseHold: user.household
+    });
 
-        if (!user?.household) {
-            return res.status(400).json({
-                message: "User is not part of any household"
-            });
-        }
+    const fresh = await Item.countDocuments({
+        houseHold: user.household,
+        status: "fresh"
+    });
 
-        const now = new Date();
+    const used = await Item.countDocuments({
+        houseHold: user.household,
+        status: "used"
+    });
 
-        const next24Hours = new Date(
-            now.getTime() + 24 * 60 * 60 * 1000
-        );
+    const wasted = await Item.countDocuments({
+        houseHold: user.household,
+        status: "wasted"
+    });
 
-        const expiringItems = await Item.find({
-            houseHold: user.household,
-            expiryDate: {
-                $gte: now,
-                $lte: next24Hours
-            }
-        })
-        .select("name category quantity expiryDate status");
+    const expired = await Item.countDocuments({
+        houseHold: user.household,
+        status: "expired"
+    });
 
-        return res.status(200).json({
-            message: "Items expiring within 24 hours",
-            count: expiringItems.length,
-            data: expiringItems
-        });
+    const expiringSoon = await Item.countDocuments({
+        houseHold: user.household,
+        status: "expiring-soon"
+    });
 
-    } catch (err) {
-        console.log("err", err);
+    return res.status(200).json({
+        wasteScore: household.wasteScore,
+        totalItem,
+        fresh,
+        used,
+        wasted,
+        expired,
+        expiringSoon
+    });
 
-        return res.status(500).json({
-            message: "Internal Server Error"
-        });
-    }
+} catch (err) {
+    console.log("err", err);
+
+    return res.status(500).json({
+        message: "Internal Server Error"
+    });
+}
  })
 
 app.listen(3000, () => {
