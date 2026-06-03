@@ -19,6 +19,10 @@ import { Item } from "./schema/Item.js";
 const app = express();
 app.use(express.json())
 app.use(cookie())
+app.use(cors({
+     origin: "http://localhost:3000",
+    credentials: true
+}));
 connectMongoDB();
 const privatekey = process.env.PRIVATEKEY || "my-secret key"
 
@@ -527,6 +531,6 @@ app.get("/api/dashboard/stats",middleware, async (req, res) => {
     }
 
  })
-app.listen(3000, () => {
+app.listen(8000, () => {
     console.log("hello")
 })
