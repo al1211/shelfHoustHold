@@ -3,18 +3,23 @@
 
 import { useState } from "react";
 import { api } from "../../../../lib/axios";
+import { useUserStore } from "../../../../store/store";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
+    const {setUser} =useUserStore.getState();
+    const navigate=useRouter();
     
     const handleSingup=async(e:React.FormEvent)=>{
       e.preventDefault();
       try{
  
       const response=await api.post("/auth/login",{email,password});
-      console.log(response.data);
+      setUser(response.data.data)
+      navigate.push("/dashboard")
       }catch(err){
         console.log(err);
       }
