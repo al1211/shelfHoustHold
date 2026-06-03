@@ -491,6 +491,42 @@ app.get("/api/dashboard/stats",middleware, async (req, res) => {
 }
  })
 
+ app.get("/api/dashboard/expiry",middleware,async(req , res)=>{
+    try{
+        const id=req.user.id;
+        const user=await User.findById(id).select("household");
+        if(user?.household){
+            res.status(400).json({
+                message:"User is not part of any household"
+            })
+        }
+        const now=new Date();
+        const next24Hours= new Date(
+            now.getTime()+24*60*60*1000
+        )
+        const expirignItem=await Item.find({
+            houseHold:user.household,
+            expiryDate:{
+                $gte:now,
+                $lte:next24Hours
+            }
+        }).select("name category quantity expiryDate status");
+
+       return res.status(200).json({
+            message:"Items expiring within 24 hours",
+            count:expirignItem.length,
+            data:expirignItem
+        })
+
+
+    }catch(err){
+        res.status(500).json({
+            message:"Internal Server Error"
+        });
+        return;
+    }
+
+ })
 app.listen(3000, () => {
     console.log("hello")
 })
