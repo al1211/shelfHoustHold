@@ -170,7 +170,7 @@ app.post("/api/households", middleware, async (req, res) => {
             household: holdeddata._id
         }
         )
-        User.save();
+     
 
         res.status(200).json({
             message: "succesfull create houst hold",
@@ -219,7 +219,7 @@ app.get("/api/households/me", middleware, async (req, res) => {
 
         const currentUser = await HouseHolded.findOne({
             members: id
-        });
+        }).populate("members","name email");
 
         if (!currentUser) {
             return res.status(404).json({
