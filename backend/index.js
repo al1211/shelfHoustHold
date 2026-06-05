@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json())
 app.use(cookie())
 app.use(cors({
-     origin: "http://localhost:3000",
+    origin: "http://localhost:3000",
     credentials: true
 }));
 connectMongoDB();
@@ -170,7 +170,7 @@ app.post("/api/households", middleware, async (req, res) => {
             household: holdeddata._id
         }
         )
-     
+
 
         res.status(200).json({
             message: "succesfull create houst hold",
@@ -219,7 +219,7 @@ app.get("/api/households/me", middleware, async (req, res) => {
 
         const currentUser = await HouseHolded.findOne({
             members: id
-        }).populate("members","name email");
+        }).populate("members", "name email");
 
         if (!currentUser) {
             return res.status(404).json({
@@ -364,173 +364,173 @@ app.put("/api/items/:id", middleware, async (req, res) => {
         const { name, category, quantity, status, expiryDate } = req.body;
         const updateItem = await Item.findByIdAndUpdate(
             id,
-    {
+            {
                 name,
                 category,
                 quantity,
                 expiryDate,
                 status
             },
-           
+
 
         );
-res.status(200).json({
-    message: "User is collected",
-    data: updateItem,
-})
-    } catch (err) {
-    console.log("err", err);
-    res.status(500).json({
-        message: "Internal Server"
-    })
-}
-})
-app.patch("/api/items/:id/status", async (req, res) => {
-    try{
-        const id=req.params.id;
-        const {status}=req.body;
-
-        const item=await Item.findByIdAndUpdate(id,{status});
-        return res.status(200).json({
-            message:"succesful updated",
-            data:item
+        res.status(200).json({
+            message: "User is collected",
+            data: updateItem,
         })
-
-    }catch(err){
-        console.log("err",err);
+    } catch (err) {
+        console.log("err", err);
         res.status(500).json({
-            message:"Internal Server Error"
+            message: "Internal Server"
         })
     }
- })
-app.delete("/api/items/:id",middleware, async (req, res) => {
-  try{
-   const id = req.params.id;
+})
+app.patch("/api/items/:id/status", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { status } = req.body;
 
-const deletedItem = await Item.findByIdAndDelete(id);
+        const item = await Item.findByIdAndUpdate(id, { status });
+        return res.status(200).json({
+            message: "succesful updated",
+            data: item
+        })
 
-if (!deletedItem) {
-    return res.status(404).json({
-        message: "Item not found"
-    });
-}
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
+})
+app.delete("/api/items/:id", middleware, async (req, res) => {
+    try {
+        const id = req.params.id;
 
-return res.status(200).json({
-    message: "Item deleted successfully"
-});
-    
-  }catch(err){
-    console.log("err",err);
-    res.status(500).json({
-        message:"Internal Server Error"
-    })
-    return;
-  }
- })
+        const deletedItem = await Item.findByIdAndDelete(id);
+
+        if (!deletedItem) {
+            return res.status(404).json({
+                message: "Item not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Item deleted successfully"
+        });
+
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+        return;
+    }
+})
 
 //Dashborad Items
 
-app.get("/api/dashboard/stats",middleware, async (req, res) => { 
- try {
-    const id = req.user.id;
+app.get("/api/dashboard/stats", middleware, async (req, res) => {
+    try {
+        const id = req.user.id;
 
-    const user = await User.findById(id)
-        .select("household");
+        const user = await User.findById(id)
+            .select("household");
 
-    if (!user?.household) {
-        return res.status(403).json({
-            message: "Not a household member"
+        if (!user?.household) {
+            return res.status(403).json({
+                message: "Not a household member"
+            });
+        }
+
+        const household = await HouseHolded.findById(
+            user.household
+        );
+
+        const totalItem = await Item.countDocuments({
+            houseHold: user.household
+        });
+
+        const fresh = await Item.countDocuments({
+            houseHold: user.household,
+            status: "fresh"
+        });
+
+        const used = await Item.countDocuments({
+            houseHold: user.household,
+            status: "used"
+        });
+
+        const wasted = await Item.countDocuments({
+            houseHold: user.household,
+            status: "wasted"
+        });
+
+        const expired = await Item.countDocuments({
+            houseHold: user.household,
+            status: "expired"
+        });
+
+        const expiringSoon = await Item.countDocuments({
+            houseHold: user.household,
+            status: "expiring-soon"
+        });
+
+        return res.status(200).json({
+            wasteScore: household.wasteScore,
+            totalItem,
+            fresh,
+            used,
+            wasted,
+            expired,
+            expiringSoon
+        });
+
+    } catch (err) {
+        console.log("err", err);
+
+        return res.status(500).json({
+            message: "Internal Server Error"
         });
     }
+})
 
-    const household = await HouseHolded.findById(
-        user.household
-    );
-
-    const totalItem = await Item.countDocuments({
-        houseHold: user.household
-    });
-
-    const fresh = await Item.countDocuments({
-        houseHold: user.household,
-        status: "fresh"
-    });
-
-    const used = await Item.countDocuments({
-        houseHold: user.household,
-        status: "used"
-    });
-
-    const wasted = await Item.countDocuments({
-        houseHold: user.household,
-        status: "wasted"
-    });
-
-    const expired = await Item.countDocuments({
-        houseHold: user.household,
-        status: "expired"
-    });
-
-    const expiringSoon = await Item.countDocuments({
-        houseHold: user.household,
-        status: "expiring-soon"
-    });
-
-    return res.status(200).json({
-        wasteScore: household.wasteScore,
-        totalItem,
-        fresh,
-        used,
-        wasted,
-        expired,
-        expiringSoon
-    });
-
-} catch (err) {
-    console.log("err", err);
-
-    return res.status(500).json({
-        message: "Internal Server Error"
-    });
-}
- })
-
- app.get("/api/dashboard/expiry",middleware,async(req , res)=>{
-    try{
-        const id=req.user.id;
-        const user=await User.findById(id).select("household");
-        if(user?.household){
+app.get("/api/dashboard/expiry", middleware, async (req, res) => {
+    try {
+        const id = req.user.id;
+        const user = await User.findById(id).select("household");
+        if (user?.household) {
             res.status(400).json({
-                message:"User is not part of any household"
+                message: "User is not part of any household"
             })
         }
-        const now=new Date();
-        const next24Hours= new Date(
-            now.getTime()+24*60*60*1000
+        const now = new Date();
+        const next24Hours = new Date(
+            now.getTime() + 24 * 60 * 60 * 1000
         )
-        const expirignItem=await Item.find({
-            houseHold:user.household,
-            expiryDate:{
-                $gte:now,
-                $lte:next24Hours
+        const expirignItem = await Item.find({
+            houseHold: user.household,
+            expiryDate: {
+                $gte: now,
+                $lte: next24Hours
             }
         }).select("name category quantity expiryDate status");
 
-       return res.status(200).json({
-            message:"Items expiring within 24 hours",
-            count:expirignItem.length,
-            data:expirignItem
+        return res.status(200).json({
+            message: "Items expiring within 24 hours",
+            count: expirignItem.length,
+            data: expirignItem
         })
 
 
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            message:"Internal Server Error"
+            message: "Internal Server Error"
         });
         return;
     }
 
- })
+})
 app.listen(8000, () => {
     console.log("hello")
 })

@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { api } from "../../../../lib/axios";
 import EditItemModal from "../../../../components/EditModal";
+import DeleteModal from "../../../../components/DeletModal";
 
 const items = [
   { id: "#1042", name: "Whole Milk", cat: "Dairy", qty: 2, expiry: "12 Jul", expDays: 8, status: "Fresh", icon: "🥛" },
@@ -15,20 +16,20 @@ const items = [
 ];
 
 const catStyles = {
-  dairy:{ badge: "bg-blue-50 text-blue-800",   icon: "💧" },
-  meat:{ badge: "bg-amber-50 text-amber-900",  icon: "🌾" },
-  produce:{ badge: "bg-green-50 text-green-800",  icon: "🌿" },
-  pantry:{ badge: "bg-pink-50 text-pink-800",    icon: "🍒" },
-  other:{ badge: "bg-green-50 text-green-800",    icon: "🍒" },
+  dairy: { badge: "bg-blue-50 text-blue-800", icon: "💧" },
+  meat: { badge: "bg-amber-50 text-amber-900", icon: "🌾" },
+  produce: { badge: "bg-green-50 text-green-800", icon: "🌿" },
+  pantry: { badge: "bg-pink-50 text-pink-800", icon: "🍒" },
+  other: { badge: "bg-green-50 text-green-800", icon: "🍒" },
 };
 
 
 
 const statusStyles = {
-  fresh:{ badge: "bg-green-50 text-green-800",  dot: "bg-green-500" },
-  expired: { badge: "bg-amber-50 text-amber-800",  dot: "bg-amber-500" },
-  used:  { badge: "bg-red-50 text-red-800",      dot: "bg-red-500" },
-  wasted:  { badge: "bg-slate-50 text-slate-900",      dot: "bg-stone-500" },
+  fresh: { badge: "bg-green-50 text-green-800", dot: "bg-green-500" },
+  expired: { badge: "bg-amber-50 text-amber-800", dot: "bg-amber-500" },
+  used: { badge: "bg-red-50 text-red-800", dot: "bg-red-500" },
+  wasted: { badge: "bg-slate-50 text-slate-900", dot: "bg-stone-500" },
 };
 
 // ── Stat Card ──────────────────────────────────────────────────────────────
@@ -48,10 +49,10 @@ export default function ItemsPage() {
   const [catFilter, setCatFilter] = useState("");
   const [statusFilter, setStatus] = useState("");
   const [sort, setSort] = useState("expiry-asc");
-  const [ItemData,setItemData]=useState("");
-  const [isOpen,setIsOpen]=useState(false);
-  const [selectedItem,setSelectedItem]=useState();
-  console.log("itemdata",ItemData?.data);
+  const [ItemData, setItemData] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
+  const [isDelete, setIsDelete] = useState(false);
 
   const filtered = useMemo(() => {
     let data = items.filter(
@@ -60,36 +61,37 @@ export default function ItemsPage() {
         (!catFilter || i.cat === catFilter) &&
         (!statusFilter || i.status === statusFilter)
     );
-    if (sort === "expiry-asc")  data = [...data].sort((a, b) => a.expDays - b.expDays);
+    if (sort === "expiry-asc") data = [...data].sort((a, b) => a.expDays - b.expDays);
     if (sort === "expiry-desc") data = [...data].sort((a, b) => b.expDays - a.expDays);
-    if (sort === "name-asc")    data = [...data].sort((a, b) => a.name.localeCompare(b.name));
-    if (sort === "qty-asc")     data = [...data].sort((a, b) => a.qty - b.qty);
+    if (sort === "name-asc") data = [...data].sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === "qty-asc") data = [...data].sort((a, b) => a.qty - b.qty);
     return data;
   }, [search, catFilter, statusFilter, sort]);
 
-  
-    const fetchItem=async()=>{
-    const respnse=await api.get("/items");
-    setItemData(respnse.data);
-    }
-    useEffect(()=>{
-      try{
-        fetchItem();
 
-      }catch(err){
-        console.log("err",err)
-      }
-      
-    },[]);
-   function formatted(dateString:any) {
-  return new Date(dateString).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-   
-    
+  const fetchItem = async () => {
+    const respnse = await api.get("/items");
+    setItemData(respnse.data);
+  }
+  useEffect(() => {
+    try {
+      fetchItem();
+
+    } catch (err) {
+      console.log("err", err)
+    }
+
+  }, []);
+  // console.log(selectedItem);
+  function formatted(dateString: any) {
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+
 
   return (
     <div className="min-h-screen bg-slate-100 p-6 font-sans">
@@ -108,7 +110,7 @@ export default function ItemsPage() {
 
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard label="Total Items"   value={ItemData.count}  sub="across 4 categories" />
+          <StatCard label="Total Items" value={ItemData.count} sub="across 4 categories" />
         </div>
 
         {/* ── Filters ── */}
@@ -193,7 +195,7 @@ export default function ItemsPage() {
                       {/* Item */}
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                         
+
                           <div>
                             <p className="text-sm font-medium text-slate-800">{item.name}</p>
                           </div>
@@ -202,8 +204,8 @@ export default function ItemsPage() {
 
                       {/* Category */}
                       <td className="px-4 py-3">
-                        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full  ${catStyles[item.category]?.badge}`}> 
-                         
+                        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full  ${catStyles[item.category]?.badge}`}>
+
                           {item.category}
                         </span>
                       </td>
@@ -231,21 +233,21 @@ export default function ItemsPage() {
                       {/* Status */}
                       <td className="px-4 py-3">
                         <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full  ${statusStyles[item.status]?.badge}`} >
-                                
-                          
-                          <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[item.status]?.dot}  `} />
+
+
+                          <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[item.status]?.dot} `} />
                           {item.status}
                         </span>
                       </td>
 
-                      <EditItemModal isOpen={isOpen}  onClose={() =>setIsOpen(false)} selectedItem={item._id} handleUpdate={()=>alert()} setSelectedItem={item._id}/>
-
+                      <EditItemModal isOpen={isOpen} onClose={() => setIsOpen(false)} selectedItem={selectedItem!} fetchItem={fetchItem} />
+                      <DeleteModal isOpen={isDelete} onClose={() => setIsDelete(false)} selectedItem={selectedItem!} fetchItem={fetchItem} />
                       {/* Actions */}
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1.5">
                           <button
                             title="Edit"
-                            onClick={()=>setIsOpen(true)}
+                            onClick={() => { setIsOpen(true); setSelectedItem(item) }}
                             className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 flex items-center justify-center text-slate-500 hover:text-slate-700 transition"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -253,10 +255,11 @@ export default function ItemsPage() {
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
                           </button>
-                       
-                          
+
+
                           <button
                             title="Delete"
+                            onClick={()=>{setIsDelete(true);setSelectedItem(item)}}
                             className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-red-50 hover:border-red-200 flex items-center justify-center text-slate-500 hover:text-red-500 transition"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -275,7 +278,7 @@ export default function ItemsPage() {
           </div>
 
           {/* Footer */}
-          {filtered.length > 0 && (
+          {/* {filtered.length > 0 && (
             <div className="px-4 py-3 border-t border-slate-100 flex items-center justify-between">
               <p className="text-xs text-slate-400">
                 Showing <span className="font-medium text-slate-600">{filtered.length}</span> of {items.length} items
@@ -286,7 +289,7 @@ export default function ItemsPage() {
                 <button className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 transition">Next</button>
               </div>
             </div>
-          )}
+          )} */}
         </div>
 
       </div>
