@@ -21,7 +21,7 @@ export default function SignInPage() {
 
     try {
       const response = await api.post("/auth/login", { email, password });
-      console.log(response.data);
+     
       setAuth(response.data.data,response.data.token);
       navigate.push("/dashboard");
     } catch (err: any) {

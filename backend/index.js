@@ -475,6 +475,45 @@ app.get("/api/dashboard/stats", middleware, async (req, res) => {
             houseHold: user.household,
             status: "expiring-soon"
         });
+        const topContributors = await Item.aggregate([
+            {
+                $match: {
+                    houseHold: user.household
+                }
+            },
+            {
+                $group: {
+                    _id: "$addedBy",
+                    totalItems: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    totalItems: -1
+                }
+            },
+            {
+                $limit: 3
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "user"
+                }
+            },
+            {
+                $unwind: "$user"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    name: "$user.name",
+                    totalItems: 1
+                }
+            }
+        ]);
 
         return res.status(200).json({
             wasteScore: household.wasteScore,
@@ -483,7 +522,8 @@ app.get("/api/dashboard/stats", middleware, async (req, res) => {
             used,
             wasted,
             expired,
-            expiringSoon
+            expiringSoon,
+            topContributors
         });
 
     } catch (err) {

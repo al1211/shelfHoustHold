@@ -19,6 +19,18 @@ const links = [
   { name: "Add Item", href: "/add-item", icon: PlusCircle },
 ];
 
+const getAvatarText = (name:string) => {
+  const words = name.trim().split(" ");
+
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+
+  return words
+    .map(word => word[0].toUpperCase())
+    .join("");
+};
+
 function NavLink({
   item,
   onClick,
@@ -61,9 +73,11 @@ function NavLink({
 function SidebarContent({
   isMobile = false,
   onClose,
+  name
 }: {
   isMobile?: boolean;
   onClose?: () => void;
+  name:string
 }) {
     const newLocal = "w-[84%] h-full bg-linear-to-r from-green-400 to-green-600 rounded-full";
   return (
@@ -100,10 +114,10 @@ function SidebarContent({
       <div className="px-4 pt-4">
         <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-100">
           <div className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-200 to-teal-300 flex items-center justify-center text-xs font-semibold text-emerald-900 shrink-0">
-            AK
+            {getAvatarText(name)}
           </div>
           <div className="min-w-0">
-            <p className="text-[13px] font-medium text-gray-900 truncate">Aryan Kumar</p>
+            <p className="text-[13px] font-medium text-gray-900 truncate">{name}</p>
             <p className="text-[11px] text-gray-400">Home Household</p>
           </div>
           <div className="ml-auto w-2 h-2 rounded-full bg-green-400 shrink-0 shadow-[0_0_0_2px_#dcfce7]" />
@@ -153,7 +167,7 @@ function SidebarContent({
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({name}:any) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -201,7 +215,7 @@ export default function Sidebar() {
 
       {/* Desktop sidebar */}
       <aside className="hidden lg:block fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-gray-100 shadow-[1px_0_0_#F3F4F6,4px_0_20px_rgba(0,0,0,0.03)] z-40">
-        <SidebarContent />
+        <SidebarContent name={name} />
       </aside>
 
       <style>{`
