@@ -4,6 +4,7 @@
   import { useRouter } from "next/navigation";
 
   import { useAuthStore } from "../../../store/store";
+import { useEffect } from "react";
 
   export default function DashboardLayout({
     children,
@@ -12,11 +13,19 @@
   }) {
     const router=useRouter();
 
-    const user=useAuthStore((state:any)=>state.user)
-    if(!user){
-      router.push("/signin")
+    const user=useAuthStore((state:any)=>state.user);
+    const token=useAuthStore((state:any)=>state.token)
+    console.log(user);
+    useEffect(()=>{
+      if(!token){
+        router.push("/signin")
+      }
+    },[token])
+    console.log("run")
+    if(!token){
+     return null;
     }
-    console.log("rrun code")
+   
     return (
       <div className="min-h-screen bg-slate-50">
         <Sidebar name={user.name} />

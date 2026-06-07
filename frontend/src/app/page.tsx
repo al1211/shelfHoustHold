@@ -1,6 +1,23 @@
+"use client"
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "../../store/store";
+import { useEffect } from "react";
 
 export default function HomePage() {
+
+  const router=useRouter();
+  
+      const user=useAuthStore((state:any)=>state.user)
+      // useEffect(()=>{
+      //   if(!user){
+      //     router.push("/signin")
+      //   }
+      // },[user,router])
+      // if(!user){
+      //  return null;
+      // }
+     
   return (
     <main className="min-h-screen bg-slate-50">
       {/* Navbar */}
@@ -43,18 +60,13 @@ export default function HomePage() {
 
             <div className="mt-8 flex gap-4">
               <Link
-                href="/signup"
+                href="/dashboard"
                 className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700"
               >
-                Get Started
+                Go to Dashboard
               </Link>
 
-              <Link
-                href="/signin"
-                className="px-6 py-3 border border-gray-600 text-black rounded-xl hover:bg-slate-100"
-              >
-                Sign In
-              </Link>
+              
             </div>
           </div>
 
