@@ -63,47 +63,14 @@ export default function AddItemPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.03)] p-5 sm:p-6">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.03)] p-5 sm:p-6">
           <form className="space-y-5" onSubmit={handleSumbit}>
 
-            {/* Barcode Scanner — top CTA */}
-            <button
-              type="button"
-              onClick={() => setScanned(!scanned)}
-              className={`w-full flex flex-col items-center justify-center gap-2 py-5 rounded-xl border-2 border-dashed transition-all duration-200 group
-                ${scanned
-                  ? "border-green-300 bg-green-50 text-green-700"
-                  : "border-gray-200 bg-gray-50 text-gray-400 hover:border-green-300 hover:bg-green-50/50 hover:text-green-600"
-                }`}
-            >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200
-                ${scanned
-                  ? "bg-green-100 text-green-600"
-                  : "bg-white border border-gray-200 text-gray-400 group-hover:border-green-200 group-hover:text-green-500"
-                }`}
-              >
-                {scanned ? <Scan size={18} strokeWidth={2} /> : <Camera size={18} strokeWidth={1.8} />}
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-semibold">
-                  {scanned ? "Barcode scanned!" : "Scan Barcode"}
-                </p>
-                <p className="text-xs mt-0.5 text-gray-400">
-                  {scanned ? "Details filled automatically" : "Auto-fill item details from barcode"}
-                </p>
-              </div>
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-100" />
-              <span className="text-xs text-gray-300 font-medium">or fill manually</span>
-              <div className="flex-1 h-px bg-gray-100" />
-            </div>
+          
 
             {/* Item Name */}
             <div className="space-y-1.5">
-              <label className="block text-md font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-500">
                 Item Name <span className="text-red-400">*</span>
               </label>
               <input
@@ -117,7 +84,7 @@ export default function AddItemPage() {
 
             {/* Category */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-gray-500">
+              <label className="block text-sm  font-medium text-gray-500">
                 Category <span className="text-red-400">*</span>
               </label>
               <div className="relative">
@@ -136,7 +103,7 @@ export default function AddItemPage() {
 
             {/* Status */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-gray-500">
+              <label className="block text-sm font-medium text-gray-500">
                 Status <span className="text-red-400">*</span>
               </label>
               <div className="relative">
@@ -156,7 +123,7 @@ export default function AddItemPage() {
             {/* Quantity + Expiry — side by side on sm+ */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-gray-500">
+                <label className="block text-sm font-medium text-gray-500">
                   Quantity <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
@@ -172,7 +139,7 @@ export default function AddItemPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-gray-500">
+                <label className="block text-sm font-medium text-gray-500">
                   Expiry Date <span className="text-red-400">*</span>
                 </label>
                 <input

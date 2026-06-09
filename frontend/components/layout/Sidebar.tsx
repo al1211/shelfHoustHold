@@ -52,7 +52,7 @@ function NavLink({
     >
       {/* Active shimmer effect */}
       {isActive && (
-        <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent pointer-events-none" />
+        <span className="absolute inset-0 bg-linear-to-r from-white/10 via-white/5 to-transparent pointer-events-none" />
       )}
 
       <span
@@ -160,7 +160,7 @@ function SidebarContent({
         <div className="mx-2 h-px bg-linear-to-r from-transparent via-white/15 to-transparent mb-4" />
 
         {/* Efficiency score */}
-        <div className="px-4 py-3.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] mb-2">
+        {/* <div className="px-4 py-3.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] mb-2">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(52,211,153,0.8)]" />
@@ -170,11 +170,11 @@ function SidebarContent({
           </div>
           <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full w-[84%] rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]"
+              className="h-full w-[84%] rounded-full bg-linear-to-r from-emerald-400 to-teal-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]"
               style={{ backgroundSize: "200% 100%" }}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Logout */}
         <button onClick={handleLogout} className="group flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm text-white/40 border border-transparent hover:bg-red-500/15 hover:border-red-400/25 hover:text-red-300 transition-all duration-200 w-full text-left">
