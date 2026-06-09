@@ -20,8 +20,8 @@ const statusStyles = {
   fresh: { badge: "bg-green-50 text-green-800", dot: "bg-green-500" },
   expired: { badge: "bg-amber-50 text-amber-800", dot: "bg-amber-500" },
   used: { badge: "bg-red-50 text-red-800", dot: "bg-red-500" },
-  wasted: { badge: "bg-slate-50 text-slate-900", dot: "bg-stone-500" },
-  expigin: { badge: "bg-slate-50 text-slate-900", dot: "bg-stone-500" },
+  wasted: { badge: "bg-slate-300 text-slate-900", dot: "bg-stone-900" },
+  "expiring-soon": { badge: "bg-stone-50 text-stone-900", dot: "bg-stone-500" },
   
 
 };
@@ -43,24 +43,69 @@ export default function ItemsPage() {
   const [catFilter, setCatFilter] = useState("");
   const [statusFilter, setStatus] = useState("");
   const [sort, setSort] = useState("expiry-asc");
-  const [ItemData, setItemData] = useState("");
+  const [ItemData, setItemData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
   const [isDelete, setIsDelete] = useState(false);
 
-  // const filtered = useMemo(() => {
-  //   let data = items.filter(
-  //     (i) =>
-  //       (!search || i.name.toLowerCase().includes(search.toLowerCase())) &&
-  //       (!catFilter || i.cat === catFilter) &&
-  //       (!statusFilter || i.status === statusFilter)
-  //   );
-  //   if (sort === "expiry-asc") data = [...data].sort((a, b) => a.expDays - b.expDays);
-  //   if (sort === "expiry-desc") data = [...data].sort((a, b) => b.expDays - a.expDays);
-  //   if (sort === "name-asc") data = [...data].sort((a, b) => a.name.localeCompare(b.name));
-  //   if (sort === "qty-asc") data = [...data].sort((a, b) => a.qty - b.qty);
-  //   return data;
-  // }, [search, catFilter, statusFilter, sort]);
+  const filteredItems = useMemo(() => {
+  if (!ItemData?.data) return [];
+
+  let data = [...ItemData.data];
+
+  // Search
+  if (search) {
+    data = data.filter((item) =>
+      item.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  // Category Filter
+  if (catFilter) {
+    data = data.filter(
+      (item) => item.category.toLowerCase() === catFilter.toLowerCase()
+    );
+  }
+
+  // Status Filter
+  if (statusFilter) {
+    data = data.filter(
+      (item) => item.status.toLowerCase() === statusFilter.toLowerCase()
+    );
+  }
+
+  // Sorting
+  switch (sort) {
+    case "expiry-asc":
+      data.sort(
+        (a, b) =>
+          new Date(a.expiryDate).getTime() -
+          new Date(b.expiryDate).getTime()
+      );
+      break;
+
+    case "expiry-desc":
+      data.sort(
+        (a, b) =>
+          new Date(b.expiryDate).getTime() -
+          new Date(a.expiryDate).getTime()
+      );
+      break;
+
+    case "name-asc":
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+
+    case "qty-asc":
+      data.sort((a, b) => a.quantity - b.quantity);
+      break;
+
+    default:
+      break;
+  }
+
+  return data;
+}, [ItemData, search, catFilter, statusFilter, sort]);
 
 
   const fetchItem = async () => {
@@ -76,7 +121,7 @@ export default function ItemsPage() {
     }
 
   }, []);
-  // console.log(selectedItem);
+
   function formatted(dateString: any) {
     return new Date(dateString).toLocaleDateString("en-IN", {
       day: "2-digit",
@@ -130,10 +175,10 @@ export default function ItemsPage() {
             className="bg-slate-50 border border-slate-200 rounded-xl px-3 h-9 text-sm text-slate-700 outline-none cursor-pointer min-w-35"
           >
             <option value="">All categories</option>
-            <option>Dairy</option>
-            <option>Bakery</option>
-            <option>Vegetables</option>
-            <option>Fruit</option>
+            <option value="dairy">Dairy</option>
+            <option value="pantry">Pantry</option>
+            <option value="produce">Produce</option>
+            <option value="other">Other</option>
           </select>
 
           {/* Status */}
@@ -143,9 +188,10 @@ export default function ItemsPage() {
             className="bg-slate-50 border border-slate-200 rounded-xl px-3 h-9 text-sm text-slate-700 outline-none cursor-pointer min-w-35"
           >
             <option value="">All statuses</option>
-            <option>Fresh</option>
-            <option>Expiring</option>
-            <option>Expired</option>
+            <option value="fresh">Fresh</option>
+            <option  value="expired">Expired</option>
+            <option value="used">Used</option>
+            <option value="wasted">Wasted</option>
           </select>
 
           {/* Sort */}
@@ -175,7 +221,7 @@ export default function ItemsPage() {
                 </tr>
               </thead>
               <tbody>
-                {ItemData.data?.length === 0 ? (
+                {filteredItems.data?.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="py-16 text-center text-sm text-slate-400">
                       <div className="text-3xl mb-2">📦</div>
@@ -183,7 +229,7 @@ export default function ItemsPage() {
                     </td>
                   </tr>
                 ) : (
-                  ItemData?.data?.map((item) => (
+                  filteredItems?.map((item) => (
                     <tr key={item._id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
 
                       {/* Item */}

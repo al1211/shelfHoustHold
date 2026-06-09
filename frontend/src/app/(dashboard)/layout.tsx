@@ -15,6 +15,7 @@ export default function DashboardLayout({
 
   const user = useAuthStore((state: any) => state.user);
   const token = useAuthStore((state: any) => state.token); const hydrated = useAuthStore.persist.hasHydrated();
+
   const hydrate = useAuthStore.persist.hasHydrated();
   useEffect(() => {
     if (hydrate && !token) {

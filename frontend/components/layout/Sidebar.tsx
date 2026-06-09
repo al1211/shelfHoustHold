@@ -13,21 +13,21 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuthStore } from "../../store/store";
- 
+
 const links = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Household", href: "/household", icon: House },
   { name: "Items", href: "/items", icon: Package },
   { name: "Add Item", href: "/add-item", icon: PlusCircle },
 ];
- 
+
 const getAvatarText = (name: string) => {
   const words = name.trim().split(" ");
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
   return words.map((word) => word[0].toUpperCase()).join("");
 };
 
- 
+
 function NavLink({
   item,
   onClick,
@@ -38,44 +38,42 @@ function NavLink({
   const pathname = usePathname();
   const isActive = pathname === item.href;
   const Icon = item.icon;
- 
- 
+
+
   return (
     <Link
       href={item.href}
       onClick={onClick}
       className={`group relative flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm transition-all duration-300 overflow-hidden
-        ${
-          isActive
-            ? "bg-white/20 backdrop-blur-md border border-white/40 text-white shadow-[0_4px_24px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.3)] font-medium"
-            : "border border-transparent text-white/50 hover:bg-white/10 hover:border-white/20 hover:text-white/80 font-normal"
+        ${isActive
+          ? "bg-white/20 backdrop-blur-md border border-white/40 text-white shadow-[0_4px_24px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.3)] font-medium"
+          : "border border-transparent text-white/50 hover:bg-white/10 hover:border-white/20 hover:text-white/80 font-normal"
         }`}
     >
       {/* Active shimmer effect */}
       {isActive && (
         <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent pointer-events-none" />
       )}
- 
+
       <span
         className={`relative flex items-center justify-center w-8 h-8 rounded-xl shrink-0 transition-all duration-300
-          ${
-            isActive
-              ? "bg-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)] text-white"
-              : "text-white/40 group-hover:text-white/70 group-hover:bg-white/10"
+          ${isActive
+            ? "bg-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)] text-white"
+            : "text-white/40 group-hover:text-white/70 group-hover:bg-white/10"
           }`}
       >
         <Icon size={15} strokeWidth={isActive ? 2.2 : 1.8} />
       </span>
- 
+
       <span className="relative">{item.name}</span>
- 
+
       {isActive && (
         <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-300 shrink-0 shadow-[0_0_6px_rgba(110,231,183,0.8)]" />
       )}
     </Link>
   );
 }
- 
+
 function SidebarContent({
   isMobile = false,
   onClose,
@@ -86,18 +84,18 @@ function SidebarContent({
   name: string;
 }) {
 
-   const logout=useAuthStore((state:any)=>state.logout)
-  const handleLogout=()=>{
-     logout()
-}
+  const logout = useAuthStore((state: any) => state.logout)
+  const handleLogout = () => {
+    logout()
+  }
   return (
     <div className="flex flex-col h-full">
- 
+
       {/* Ambient orbs for glass depth */}
       {/* <div className="absolute top-0 left-0 w-48 h-48 bg-slate-400/20 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-16 right-0 w-40 h-40 bg-slate-300/15 rounded-full blur-3xl pointer-events-none translate-x-1/2" />
       <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-slate-500/10 rounded-full blur-2xl pointer-events-none -translate-x-1/2 -translate-y-1/2" /> */}
- 
+
       {/* Logo */}
       <div className="relative flex items-center justify-between px-5 pt-6 pb-5">
         <div className="flex items-center gap-3">
@@ -124,10 +122,10 @@ function SidebarContent({
           </button>
         )}
       </div>
- 
+
       {/* Divider */}
       <div className="mx-5 h-px bg-linear-to-r from-transparent via-white/15 to-transparent mb-4" />
- 
+
       {/* User chip */}
       <div className="px-4 mb-5">
         <div className="flex items-center gap-3 px-3.5 py-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_4px_12px_rgba(0,0,0,0.1)]">
@@ -141,26 +139,26 @@ function SidebarContent({
           </div>
         </div>
       </div>
- 
+
       {/* Nav label */}
       <div className="px-5 pb-2">
         <p className="text-[9.5px] font-bold text-white/25 uppercase tracking-[0.18em]">
           Navigation
         </p>
       </div>
- 
+
       {/* Nav links */}
       <nav className="flex-1 px-3 flex flex-col gap-1">
         {links.map((item) => (
           <NavLink key={item.href} item={item} onClick={isMobile ? onClose : undefined} />
         ))}
       </nav>
- 
+
       {/* Bottom */}
       <div className="px-3 pb-5 pt-4">
         {/* Divider */}
         <div className="mx-2 h-px bg-linear-to-r from-transparent via-white/15 to-transparent mb-4" />
- 
+
         {/* Efficiency score */}
         <div className="px-4 py-3.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] mb-2">
           <div className="flex items-center justify-between mb-2">
@@ -177,7 +175,7 @@ function SidebarContent({
             />
           </div>
         </div>
- 
+
         {/* Logout */}
         <button onClick={handleLogout} className="group flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm text-white/40 border border-transparent hover:bg-red-500/15 hover:border-red-400/25 hover:text-red-300 transition-all duration-200 w-full text-left">
           <span className="flex items-center justify-center w-8 h-8 rounded-xl shrink-0 group-hover:bg-red-500/20 transition-all duration-200">
@@ -189,10 +187,10 @@ function SidebarContent({
     </div>
   );
 }
- 
+
 export default function Sidebar({ name }: any) {
   const [open, setOpen] = useState(false);
- 
+
   const newLocal = "absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/85 to-slate-950/90 backdrop-blur-2xl";
   return (
     <>
@@ -215,7 +213,7 @@ export default function Sidebar({ name }: any) {
           <Menu size={17} />
         </button>
       </div>
- 
+
       {/* Mobile overlay */}
       {open && (
         <div
@@ -239,7 +237,7 @@ export default function Sidebar({ name }: any) {
           </div>
         </div>
       )}
- 
+
       {/* Desktop sidebar */}
       <aside className="hidden lg:block fixed top-0 left-0 bottom-0 w-64 z-40 overflow-hidden">
         {/* Layered glass background */}
@@ -252,7 +250,7 @@ export default function Sidebar({ name }: any) {
           <SidebarContent name={name} />
         </div>
       </aside>
- 
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
         @keyframes slideIn {
@@ -267,5 +265,5 @@ export default function Sidebar({ name }: any) {
     </>
   );
 }
- 
+
 
