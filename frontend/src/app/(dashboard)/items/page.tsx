@@ -4,16 +4,7 @@ import { api } from "../../../../lib/axios";
 import EditItemModal from "../../../../components/EditModal";
 import DeleteModal from "../../../../components/DeletModal";
 
-const items = [
-  { id: "#1042", name: "Whole Milk", cat: "Dairy", qty: 2, expiry: "12 Jul", expDays: 8, status: "Fresh", icon: "🥛" },
-  { id: "#1043", name: "Sourdough Bread", cat: "Bakery", qty: 1, expiry: "7 Jul", expDays: 3, status: "Expiring", icon: "🍞" },
-  { id: "#1044", name: "Cheddar Cheese", cat: "Dairy", qty: 3, expiry: "20 Jul", expDays: 16, status: "Fresh", icon: "🧀" },
-  { id: "#1045", name: "Spinach", cat: "Vegetables", qty: 0, expiry: "5 Jul", expDays: 1, status: "Expired", icon: "🥬" },
-  { id: "#1046", name: "Croissant", cat: "Bakery", qty: 6, expiry: "6 Jul", expDays: 2, status: "Expiring", icon: "🥐" },
-  { id: "#1047", name: "Tomatoes", cat: "Vegetables", qty: 4, expiry: "14 Jul", expDays: 10, status: "Fresh", icon: "🍅" },
-  { id: "#1048", name: "Strawberries", cat: "Fruit", qty: 2, expiry: "8 Jul", expDays: 4, status: "Expiring", icon: "🍓" },
-  { id: "#1049", name: "Greek Yogurt", cat: "Dairy", qty: 5, expiry: "18 Jul", expDays: 14, status: "Fresh", icon: "🫙" },
-];
+
 
 const catStyles = {
   dairy: { badge: "bg-blue-50 text-blue-800", icon: "💧" },
@@ -30,6 +21,9 @@ const statusStyles = {
   expired: { badge: "bg-amber-50 text-amber-800", dot: "bg-amber-500" },
   used: { badge: "bg-red-50 text-red-800", dot: "bg-red-500" },
   wasted: { badge: "bg-slate-50 text-slate-900", dot: "bg-stone-500" },
+  expigin: { badge: "bg-slate-50 text-slate-900", dot: "bg-stone-500" },
+  
+
 };
 
 // ── Stat Card ──────────────────────────────────────────────────────────────
@@ -54,19 +48,19 @@ export default function ItemsPage() {
   const [selectedItem, setSelectedItem] = useState();
   const [isDelete, setIsDelete] = useState(false);
 
-  const filtered = useMemo(() => {
-    let data = items.filter(
-      (i) =>
-        (!search || i.name.toLowerCase().includes(search.toLowerCase())) &&
-        (!catFilter || i.cat === catFilter) &&
-        (!statusFilter || i.status === statusFilter)
-    );
-    if (sort === "expiry-asc") data = [...data].sort((a, b) => a.expDays - b.expDays);
-    if (sort === "expiry-desc") data = [...data].sort((a, b) => b.expDays - a.expDays);
-    if (sort === "name-asc") data = [...data].sort((a, b) => a.name.localeCompare(b.name));
-    if (sort === "qty-asc") data = [...data].sort((a, b) => a.qty - b.qty);
-    return data;
-  }, [search, catFilter, statusFilter, sort]);
+  // const filtered = useMemo(() => {
+  //   let data = items.filter(
+  //     (i) =>
+  //       (!search || i.name.toLowerCase().includes(search.toLowerCase())) &&
+  //       (!catFilter || i.cat === catFilter) &&
+  //       (!statusFilter || i.status === statusFilter)
+  //   );
+  //   if (sort === "expiry-asc") data = [...data].sort((a, b) => a.expDays - b.expDays);
+  //   if (sort === "expiry-desc") data = [...data].sort((a, b) => b.expDays - a.expDays);
+  //   if (sort === "name-asc") data = [...data].sort((a, b) => a.name.localeCompare(b.name));
+  //   if (sort === "qty-asc") data = [...data].sort((a, b) => a.qty - b.qty);
+  //   return data;
+  // }, [search, catFilter, statusFilter, sort]);
 
 
   const fetchItem = async () => {

@@ -172,7 +172,7 @@ app.post("/api/households", middleware, async (req, res) => {
         )
 
 
-        res.status(200).json({
+       return res.status(200).json({
             message: "succesfull create houst hold",
             data: holdeddata,
             success: true
@@ -196,11 +196,12 @@ app.post("/api/households/join", middleware, async (req, res) => {
             res.status(402).json({
                 message: "Invalid invite code"
             })
+            return
         }
 
         findInviteCode.members.addToSet(id);
         await findInviteCode.save();
-        res.status(200).json({
+       return res.status(200).json({
             message: "you are joined room",
             data: findInviteCode
         })
@@ -210,6 +211,7 @@ app.post("/api/households/join", middleware, async (req, res) => {
         res.status(500).json({
             message: "Internal Server Error"
         })
+        return
 
     }
 })
@@ -228,7 +230,7 @@ app.get("/api/households/me", middleware, async (req, res) => {
         }
 
 
-        res.status(200).json({
+       return res.status(200).json({
             message: "Current user's household",
             data: currentUser
         })
@@ -239,6 +241,7 @@ app.get("/api/households/me", middleware, async (req, res) => {
         res.status(500).json({
             message: "Internal Server Error"
         })
+        return;
     }
 })
 app.get("/api/households/:id/members", middleware, async (req, res) => {
@@ -248,7 +251,7 @@ app.get("/api/households/:id/members", middleware, async (req, res) => {
 
         if (!listAllmember) return res.status(403).json({ message: "no member" });
 
-        res.status(200).json({
+      return  res.status(200).json({
             message: "get all members",
             data: listAllmember
         })
@@ -355,6 +358,7 @@ app.post("/api/items", middleware, async (req, res) => {
         res.status(500).json({
             message: "Internal Server Error"
         })
+        return;
     }
 
 })
@@ -374,7 +378,7 @@ app.put("/api/items/:id", middleware, async (req, res) => {
 
 
         );
-        res.status(200).json({
+       return res.status(200).json({
             message: "User is collected",
             data: updateItem,
         })
@@ -543,6 +547,7 @@ app.get("/api/dashboard/expiry", middleware, async (req, res) => {
             res.status(400).json({
                 message: "User is not part of any household"
             })
+            return;
         }
         const now = new Date();
         const next24Hours = new Date(

@@ -1,31 +1,4 @@
-// Claude finished the response
 
-// can you  this side glassform professional UI pure glass using tailwind css and responsive
-// 1:24 AM
-// Viewed a file, created a file
-
-// Now let me show you a live preview of the glassmorphism design:
-// Presented file
-
-// Here's what changed in the glassmorphism redesign:
-
-// Background & depth — The sidebar now uses a dark emerald gradient (from-emerald-900/90 via-teal-900/85) with three layered ambient orbs (radial glow spots) and a subtle noise texture overlay. A single-pixel shimmer border runs down the right edge.
-
-// Active nav item — Instead of a light green tint, it's now a frosted white glass pill with bg-white/20, a border-white/40 outline, inner highlight via inset 0 1px 0, a shimmer gradient overlay, and an emerald glow dot.
-
-// User chip — bg-white/10 backdrop-blur-md with inset 0 1px 0 rgba(255,255,255,0.2) gives it the floating glass card look. The status dot has a box-shadow glow.
-
-// Logo icon — Gets the same glass treatment: backdrop-blur-sm + gradient + shadow glow.
-
-// Mobile drawer — The backdrop uses backdrop-blur-sm and the drawer slides in with cubic-bezier(0.16,1,0.3,1) for a springy feel.
-
-// Hover/Logout — Red states use hover:bg-red-500/15 hover:border-red-400/25 for a glass-tinted danger feel without harsh solid colors.
-// Sidebar
-// Code · TSX 
-
-
-// Claude is AI and can make mistakes. Please double-check responses.
-// Sidebar · TSX
 "use client";
 import Link from "next/link";
 import { useState } from "react";
@@ -39,6 +12,7 @@ import {
   PlusCircle,
   LogOut,
 } from "lucide-react";
+import { useAuthStore } from "../../store/store";
  
 const links = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -52,6 +26,7 @@ const getAvatarText = (name: string) => {
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
   return words.map((word) => word[0].toUpperCase()).join("");
 };
+
  
 function NavLink({
   item,
@@ -63,6 +38,7 @@ function NavLink({
   const pathname = usePathname();
   const isActive = pathname === item.href;
   const Icon = item.icon;
+ 
  
   return (
     <Link
@@ -109,6 +85,11 @@ function SidebarContent({
   onClose?: () => void;
   name: string;
 }) {
+
+   const logout=useAuthStore((state:any)=>state.logout)
+  const handleLogout=()=>{
+     logout()
+}
   return (
     <div className="flex flex-col h-full">
  
@@ -178,7 +159,7 @@ function SidebarContent({
       {/* Bottom */}
       <div className="px-3 pb-5 pt-4">
         {/* Divider */}
-        <div className="mx-2 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent mb-4" />
+        <div className="mx-2 h-px bg-linear-to-r from-transparent via-white/15 to-transparent mb-4" />
  
         {/* Efficiency score */}
         <div className="px-4 py-3.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] mb-2">
@@ -198,7 +179,7 @@ function SidebarContent({
         </div>
  
         {/* Logout */}
-        <button className="group flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm text-white/40 border border-transparent hover:bg-red-500/15 hover:border-red-400/25 hover:text-red-300 transition-all duration-200 w-full text-left">
+        <button onClick={handleLogout} className="group flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm text-white/40 border border-transparent hover:bg-red-500/15 hover:border-red-400/25 hover:text-red-300 transition-all duration-200 w-full text-left">
           <span className="flex items-center justify-center w-8 h-8 rounded-xl shrink-0 group-hover:bg-red-500/20 transition-all duration-200">
             <LogOut size={15} strokeWidth={1.8} />
           </span>
@@ -218,7 +199,7 @@ export default function Sidebar({ name }: any) {
       {/* Mobile top navbar */}
       <div className="lg:hidden flex items-center justify-between px-5 py-3.5 bg-linear-to-r from-emerald-900/95 to-teal-900/95 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400/80 to-teal-600/80 flex items-center justify-center shadow-[0_2px_8px_rgba(52,211,153,0.4)] border border-white/20">
+          <div className="w-8 h-8 rounded-xl bg-linear-to-br from-emerald-400/80 to-teal-600/80 flex items-center justify-center shadow-[0_2px_8px_rgba(52,211,153,0.4)] border border-white/20">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -246,7 +227,7 @@ export default function Sidebar({ name }: any) {
             onClick={() => setOpen(false)}
           />
           <div
-            className="absolute top-0 left-0 bottom-0 w-72 relative overflow-hidden"
+            className="absolute top-0 left-0 bottom-0 w-72 overflow-hidden"
             style={{ animation: "slideIn 0.25s cubic-bezier(0.16,1,0.3,1)" }}
           >
             {/* Glass bg for mobile */}
