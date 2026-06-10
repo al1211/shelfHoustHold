@@ -20,6 +20,7 @@ interface Stats {
   totalItem: number;
   wasted: number;
   topContributors: TopContributer[];
+  used:number;
 }
 
 interface LeaderboardEntry {
@@ -38,7 +39,7 @@ interface LeaderboardEntry {
 
 export default function DashboardPage() {
   
-  const [stats, setStats] = useState<Stats>({ fresh: 0, expiringSoon: 0, expired: 0, wasteScore: 0, totalItem: 0, wasted: 0, topContributors: [] });
+  const [stats, setStats] = useState<Stats>({ fresh: 0, expiringSoon: 0, expired: 0, wasteScore: 0, totalItem: 0,used:0, wasted: 0, topContributors: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
