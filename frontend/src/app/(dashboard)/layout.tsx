@@ -14,14 +14,15 @@ export default function DashboardLayout({
   const router = useRouter();
 
   const user = useAuthStore((state: any) => state.user);
-  const token = useAuthStore((state: any) => state.token); const hydrated = useAuthStore.persist.hasHydrated();
-
-  const hydrate = useAuthStore.persist.hasHydrated();
+  const token = useAuthStore((state: any) => state.token); 
+  const hydrated = useAuthStore(
+  (state) => state.hasHydrated
+);
   useEffect(() => {
-    if (hydrate && !token) {
+    if (hydrated && !token) {
       router.replace("/signin")
     }
-  }, [hydrate, token, user])
+  }, [hydrated, token, user])
   if (!hydrated) {
     return <div>Loading...</div>;
   }

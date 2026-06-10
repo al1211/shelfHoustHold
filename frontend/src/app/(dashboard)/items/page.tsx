@@ -4,6 +4,36 @@ import { api } from "../../../../lib/axios";
 import EditItemModal from "../../../../components/EditModal";
 import DeleteModal from "../../../../components/DeletModal";
 
+export type Category =
+  | "dairy"
+  | "meat"
+  | "produce"
+  | "pantry"
+  | "other";
+
+
+export  type Status =
+  | "fresh"
+  | "expired"
+  | "used"
+  | "wasted"
+  | "expiring-soon";
+
+
+export interface Item {
+  _id: string;
+  name: string;
+  category: Category;
+  quantity: number;
+  status: Status;
+  expiryDate: string;
+}
+
+interface ItemResponse {
+  message: string;
+  count: number;
+  data: Item[];
+}
 
 
 const catStyles = {
@@ -27,7 +57,7 @@ const statusStyles = {
 };
 
 // ── Stat Card ──────────────────────────────────────────────────────────────
-function StatCard({ label, value, sub, valueClass = "" }) {
+function StatCard({ label, value, sub, valueClass = "" }:{label:string,value:number|undefined,sub:any,valueClass:string}) {
   return (
     <div className="bg-white rounded-xl p-4">
       <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">{label}</p>
@@ -43,13 +73,16 @@ export default function ItemsPage() {
   const [catFilter, setCatFilter] = useState("");
   const [statusFilter, setStatus] = useState("");
   const [sort, setSort] = useState("expiry-asc");
-  const [ItemData, setItemData] = useState([]);
+  const [ItemData, setItemData] = useState<ItemResponse | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState();
+  const [selectedItem, setSelectedItem] = useState<Item |null>();
   const [isDelete, setIsDelete] = useState(false);
+  console.log(ItemData);
 
   const filteredItems = useMemo(() => {
-  if (!ItemData?.data) return [];
+if (!ItemData || !ItemData.data) {
+  return [];
+}
 
   let data = [...ItemData.data];
 
@@ -149,7 +182,7 @@ export default function ItemsPage() {
 
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard label="Total Items" value={ItemData.count} sub="across 4 categories" />
+          <StatCard label="Total Items" value={ItemData?.count} sub="across 4 categories" valueClass=" " />
         </div>
 
         {/* ── Filters ── */}
@@ -221,7 +254,7 @@ export default function ItemsPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredItems.data?.length === 0 ? (
+                {filteredItems.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="py-16 text-center text-sm text-slate-400">
                       <div className="text-3xl mb-2">📦</div>
@@ -252,7 +285,7 @@ export default function ItemsPage() {
 
                       {/* Qty */}
                       <td className="px-4 py-3">
-                        <span className={`text-sm font-semibold ${item.qty <= 1 ? "text-red-500" : "text-slate-700"}`}>
+                        <span className={`text-sm font-semibold ${item.quantity <= 1 ? "text-red-500" : "text-slate-700"}`}>
                           {item.quantity}
                           {item.quantity <= 1 && (
                             <span className="ml-1 text-xs font-normal text-red-400">low</span>
@@ -262,7 +295,7 @@ export default function ItemsPage() {
 
                       {/* Expiry */}
                       <td className="px-4 py-3">
-                        <span className={`flex items-center gap-1.5 text-sm ${item.expDays <= 3 ? "text-red-500" : "text-slate-500"}`}>
+                        <span className={`flex items-center gap-1.5 text-sm ${Number(item.expiryDate) <= 3 ? "text-red-500" : "text-slate-500"}`}>
                           <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
                           </svg>

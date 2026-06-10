@@ -11,28 +11,30 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
+  hasHydrated: boolean;
 
+  setHasHydrated: (state: boolean) => void;
   setAuth: (user: User, token: string) => void;
   logout: () => void;
 }
-
-export const useAuthStore = create(
+export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
       token: null,
+      hasHydrated: false,
 
-      setAuth: (user:User, token:string) =>
-        set({ user, token }),
+      setHasHydrated: (state) => set({ hasHydrated: state }),
 
-      logout: () =>
-        set({
-          user: null,
-          token: null,
-        }),
+      setAuth: (user, token) => set({ user, token }),
+
+      logout: () => set({ user: null, token: null }),
     }),
     {
       name: "auth-storage",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

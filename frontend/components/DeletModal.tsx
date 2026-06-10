@@ -1,15 +1,6 @@
+import { Item, Status } from "@/app/(dashboard)/items/page";
 import { api } from "../lib/axios";
 
-type Status = "fresh" | "expired" | "used" | "wasted";
-
-interface Item {
-  _id: string;
-  name: string;
-  category: string;
-  status: Status;
-  expiryDate: string;
-  quantity: number;
-}
 
 interface DeleteItemModalProps {
   isOpen: boolean;
@@ -23,6 +14,7 @@ const STATUS_COLORS: Record<Status, string> = {
   expired: "text-slate-500",
   used: "text-amber-500",
   wasted: "text-rose-500",
+  "expiring-soon":"text-slate-900"
 };
 
 export default function DeleteModal({

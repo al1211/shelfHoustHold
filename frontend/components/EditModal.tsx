@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 import { api } from "../lib/axios";
+import { Item, Status } from "@/app/(dashboard)/items/page";
 
-type Status = "fresh" | "expired" | "used" | "wasted";
 
-interface Item {
-  _id:string
-  name: string;
-  category: string;
-  status: Status;
-  expiryDate: string;
-  quantity: number;
-}
 
 interface EditItemModalProps {
   isOpen: boolean;

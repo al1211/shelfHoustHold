@@ -22,7 +22,6 @@ const statusss = [
 
 
 export default function AddItemPage() {
-  const [scanned, setScanned] = useState(false);
   const [title,setTitle]=useState("");
   const [quality,setQuality]=useState<number>(1);
   const [status,setStatus]=useState("");
