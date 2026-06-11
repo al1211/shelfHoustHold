@@ -21,7 +21,7 @@ export function middleware(req: NextRequest) {
     path.startsWith("/dashboard") ||
     path.startsWith("/household") ||
     path.startsWith("/items") ||
-    path.startsWith("/additem");
+    path.startsWith("/add-item");
 
   // Login nahi hai aur protected route access kar raha hai
   if (!token && isProtectedRoute) {
