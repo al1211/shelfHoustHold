@@ -115,7 +115,7 @@ app.post("/api/auth/login", async (req, res) => {
         const token = await jwt.sign({ id: checkUserExist._id }, privatekey, { expiresIn: "1d" });
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000
         })
