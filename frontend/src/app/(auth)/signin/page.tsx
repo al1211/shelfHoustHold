@@ -10,6 +10,7 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  console.log(process.env.NEXT_PUBLIC_API_URL);
   
   const setAuth:any = useAuthStore((state:any)=>state.setAuth)
   const navigate = useRouter();

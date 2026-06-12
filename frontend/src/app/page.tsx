@@ -8,7 +8,7 @@ export default function HomePage() {
 
   const router=useRouter();
   
-      const user=useAuthStore((state:any)=>state.user)
+  const user=useAuthStore((state:any)=>state.user)
      
      
   return (
