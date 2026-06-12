@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json())
 app.use(cookie())
 app.use(cors({
-    origin: "https://householdshelf.netlify.app/",
+    origin: "https://householdshelf.netlify.app",
     credentials: true
 }));
 connectMongoDB();
