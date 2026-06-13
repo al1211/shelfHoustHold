@@ -17,13 +17,13 @@ import { Item } from "./schema/Item.js";
 
 
 const app = express();
-app.use(express.json())
 app.use(cookie())
-app.use(cors({
-    origin: "https://householdshelf.netlify.app",
-    credentials: true
-}));
+    app.use(cors({
+        origin: "https://householdshelf.netlify.app",
+        credentials: true
+    }));
 connectMongoDB();
+app.use(express.json())
 const privatekey = process.env.PRIVATEKEY || "my-secret key"
 
 // check health
