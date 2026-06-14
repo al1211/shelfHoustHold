@@ -24,6 +24,7 @@ export default function SignInPage() {
       const response = await api.post("/auth/login", { email, password });
      
       setAuth(response.data.data,response.data.token);
+      localStorage.setItem("token",response.data.token);
       navigate.push("/dashboard");
     } catch (err: any) {
       console.log(err);
