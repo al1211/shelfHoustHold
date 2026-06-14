@@ -113,17 +113,12 @@ app.post("/api/auth/login", async (req, res) => {
             })
         }
         const token = await jwt.sign({ id: checkUserExist._id }, privatekey, { expiresIn: "1d" });
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "None",
-            maxAge: 24 * 60 * 60 * 1000
-        })
+       
 
 
 
 
-        res.status(200).json({
+       return res.status(200).json({
             message: "succesfull login",
             data: checkUserExist,
             token,
