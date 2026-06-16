@@ -19,7 +19,7 @@ import { Item } from "./schema/Item.js";
 const app = express();
 app.use(cookie())
     app.use(cors({
-        origin: "https://householdshelf.netlify.app",
+        origin: ["https://householdshelf.netlify.app","http://localhost:3000"],
         credentials: true
     }));
 connectMongoDB();
@@ -102,13 +102,13 @@ app.post("/api/auth/login", async (req, res) => {
 
         const checkUserExist = await User.findOne({ email });
         if (!checkUserExist) {
-            res.status(402).json({
+            return res.status(402).json({
                 message: "User does not exist"
             })
         }
         const comparepassword = await bcrypt.compare(password, checkUserExist.password);
         if (!comparepassword) {
-            res.status(403).json({
+          return  res.status(403).json({
                 message: "Invalid usernam and password"
             })
         }
@@ -126,6 +126,7 @@ app.post("/api/auth/login", async (req, res) => {
         })
 
     } catch (err) {
+      return
         res.status(500).json({
             message: "Internal Server Error"
         })

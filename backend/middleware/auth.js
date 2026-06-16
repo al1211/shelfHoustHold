@@ -15,7 +15,7 @@ export const middleware=async(req,res,next)=>{
         req.user = verified; // Attach user payload to the request
         
     } catch (err) {
-        res.status(403).json({ error: 'Invalid or expired token' });
+      return  res.status(403).json({ error: 'Invalid or expired token' });
     }
  next();
 }

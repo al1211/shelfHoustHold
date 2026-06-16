@@ -25,6 +25,7 @@ export default function SignInPage() {
      
       setAuth(response.data.data,response.data.token);
       localStorage.setItem("token",response.data.token);
+      console.log("token",localStorage.getItem("token"))
       navigate.push("/dashboard");
     } catch (err: any) {
       console.log(err);
