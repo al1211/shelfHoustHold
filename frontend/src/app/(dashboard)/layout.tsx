@@ -15,8 +15,12 @@ export default function DashboardLayout({
   const [checked, setChecked] = useState(false); // check complete hua ya nahi
 
   useEffect(() => {
+   console.log("Dashboard Layout Mounted");
     // localStorage sirf client pe chalega — safe
     const stored = localStorage.getItem("token");
+   
+  console.log("Stored Token:", stored);
+  console.log("Path:", window.location.pathname);
     setToken(stored);
     setChecked(true);
 

@@ -93,12 +93,14 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
     try {
         const { email, password } = req.body;
+      
         if (!email || !password) {
             res.status(403).json({
                 message: "Inavlid user name and schema"
             })
             return;
         }
+        
 
         const checkUserExist = await User.findOne({ email });
         if (!checkUserExist) {
@@ -107,6 +109,8 @@ app.post("/api/auth/login", async (req, res) => {
             })
         }
         const comparepassword = await bcrypt.compare(password, checkUserExist.password);
+       
+
         if (!comparepassword) {
           return  res.status(403).json({
                 message: "Invalid usernam and password"
@@ -117,6 +121,7 @@ app.post("/api/auth/login", async (req, res) => {
 
 
 
+      
 
        return res.status(200).json({
             message: "succesfull login",

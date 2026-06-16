@@ -11,10 +11,10 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   console.log(process.env.NEXT_PUBLIC_API_URL);
-  
-  const setAuth:any = useAuthStore((state:any)=>state.setAuth)
+
+  const setAuth: any = useAuthStore((state: any) => state.setAuth)
   const navigate = useRouter();
-    
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -22,11 +22,13 @@ export default function SignInPage() {
 
     try {
       const response = await api.post("/auth/login", { email, password });
-     
-      setAuth(response.data.data,response.data.token);
-      localStorage.setItem("token",response.data.token);
-      console.log("token",localStorage.getItem("token"))
+
+      setAuth(response.data.data, response.data.token);
+      localStorage.setItem("token", response.data.token);
+      console.log("token", localStorage.getItem("token"))
+      console.log("Before push");
       navigate.push("/dashboard");
+      console.log("After push");
     } catch (err: any) {
       console.log(err);
       setError(err?.response?.data?.message || "Invalid email or password. Please try again.");
@@ -37,17 +39,17 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-zinc-100 px-4 relative overflow-hidden">
-      
+
       {/* Background Orbs / Glow (Landing page se matching) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-emerald-500/10 blur-[120px] pointer-events-none -z-10" />
 
       <div className="w-full max-w-md relative group">
         {/* Subtle border glow effect */}
         <div className="absolute -inset-0.5 bg-linear-to-r from-emerald-500/30 to-teal-500/30 rounded-2xl blur opacity-30 transition duration-1000 group-hover:opacity-40" />
-        
+
         {/* Main Card */}
         <div className="relative w-full rounded-2xl bg-zinc-900/80 border border-zinc-800 p-8 shadow-2xl backdrop-blur-xl">
-          
+
           {/* Logo / Icon */}
           <div className="flex justify-center mb-6">
             <div className="w-10 h-10 bg-linear-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/10">
