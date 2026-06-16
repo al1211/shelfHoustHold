@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../../../store/store";
 import Sidebar from "../../../components/layout/Sidebar";
+import "../../../lib/api"
 
 export default function DashboardLayout({
   children,
