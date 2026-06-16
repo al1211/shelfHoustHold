@@ -19,7 +19,7 @@ import { Item } from "./schema/Item.js";
 const app = express();
 app.use(cookie())
     app.use(cors({
-        origin: "http://localhost:3000",
+        origin: "https://householdshelf.netlify.app",
         credentials: true
     }));
 connectMongoDB();
