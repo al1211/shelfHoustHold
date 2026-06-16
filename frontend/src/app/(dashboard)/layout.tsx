@@ -23,7 +23,7 @@ export default function DashboardLayout({
     if (!stored) {
       router.replace("/signin");
     }
-  }, [token]);
+  }, []);
 
   // Check hone tak kuch mat dikhao — flickering nahi hogi
   if (!checked) return null;
