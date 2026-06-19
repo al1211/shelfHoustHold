@@ -14,7 +14,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-slate-50">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-8 py-5 border-b bg-white">
-        <h1 className="text-2xl font-bold text-green-600">
+        <h1 className="text-2xl font-bold text-green-500">
           Expiry Tracker
         </h1>
 
@@ -102,7 +102,7 @@ export default function HomePage() {
                 <div className="w-[84%] h-full bg-green-500"></div>
               </div>
 
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-gray-600">
                 84% efficiency
               </p>
             </div>
