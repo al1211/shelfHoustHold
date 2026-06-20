@@ -33,7 +33,7 @@ export default function DashboardLayout({
   if (!checked) return null;
 
   // Token nahi hai toh bhi null (redirect ho raha hai background mein)
-  if (!token) return null;
+  if (!token) return <h1>Sorry for tha you don't have a token</h1>;
 
   return (
     <div className="min-h-screen bg-slate-50">
